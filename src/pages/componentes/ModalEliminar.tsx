@@ -1,6 +1,9 @@
 // src/components/ModalEliminar.tsx
 import { useState } from 'react';
-import { db } from '../firebaseConfig';
+import { db } from '../firebase';
+
+
+
 import { doc, deleteDoc } from 'firebase/firestore';
 
 const ModalEliminar = ({ id, onClose, onDeleteSuccess }) => {

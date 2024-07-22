@@ -1,5 +1,4 @@
-// src/pages/inicio-sesion.tsx
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 
 const InicioSesion = () => {
@@ -7,10 +6,10 @@ const InicioSesion = () => {
   const [password, setPassword] = useState('');
   const router = useRouter();
 
-  const handleLogin = (e) => {
-    e.preventDefault();
+  const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (username === 'admin' && password === 'admin') {
-      router.push('/tablero');
+      router.push('/tablero'); // Asegúrate que esta es la ruta correcta
     } else {
       alert('Acceso denegado: Credenciales incorrectas');
     }
@@ -21,21 +20,25 @@ const InicioSesion = () => {
       <h2>Inicio de Sesión</h2>
       <form onSubmit={handleLogin}>
         <div className="mb-3">
-          <label className="form-label">Nombre de Usuario</label>
+          <label htmlFor="username" className="form-label">Nombre de Usuario</label>
           <input
+            id="username"
             type="text"
             className="form-control"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            required
           />
         </div>
         <div className="mb-3">
-          <label className="form-label">Contraseña</label>
+          <label htmlFor="password" className="form-label">Contraseña</label>
           <input
+            id="password"
             type="password"
             className="form-control"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
         </div>
         <button type="submit" className="btn btn-primary">Iniciar Sesión</button>

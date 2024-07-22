@@ -1,16 +1,12 @@
+// src/pages/index.tsx
+import React from 'react';
 
-import Link from 'next/link';
-
-const Home = () =>{
+const HomePage = () => {
   return (
-    <>
-    <nav>
-      <Link href="/Pagina1">Pagina1</Link>
-    </nav>
-      <p> Hola </p>
-      <p> Chao </p>
-     
-
-    </>
+    <div>
+      <h1>Bienvenido a la página de inicio</h1>
+    </div>
   );
-}
+};
+
+export default HomePage;
