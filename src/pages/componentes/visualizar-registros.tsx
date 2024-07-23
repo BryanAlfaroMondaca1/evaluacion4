@@ -1,72 +1,41 @@
-// src/pages/visualizar-registros.tsx
-import { useState, useEffect } from 'react';
-import { db } from '../firebaseConfig';
-import { collection, getDocs } from 'firebase/firestore';
-import { useRouter } from 'next/router';
-import ModalEliminar from '../components/ModalEliminar';
+import React, { useState, useEffect } from 'react';
+
+// Definiendo el tipo para los registros
+interface Registro {
+  id: number; // Ajusta el tipo según tus datos, puede ser string si tus ID son textuales
+  info: string;
+}
 
 const VisualizarRegistros = () => {
-  const [registros, setRegistros] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedId, setSelectedId] = useState(null);
-  const router = useRouter();
+  // Definir el estado inicial para los registros
+  const [registros, setRegistros] = useState<Registro[]>([]); // Usando el tipo definido
 
   useEffect(() => {
-    const fetchRegistros = async () => {
-      const querySnapshot = await getDocs(collection(db, 'coca-cola'));
-      const docs = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setRegistros(docs);
-    };
-    fetchRegistros();
+    // Simulando la carga de datos
+    const datosCargados: Registro[] = [
+      { id: 1, info: 'Ejemplo 1' },
+      { id: 2, info: 'Ejemplo 2' }
+    ];
+    setRegistros(datosCargados);
   }, []);
 
-  const handleDeleteSuccess = () => {
-    setRegistros(registros.filter(registro => registro.id !== selectedId));
-    setSelectedId(null);
-  };
-
   return (
-    <div className="container">
-      <h2>Registros</h2>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Información</th>
-            <th>Acciones</th>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Información</th>
+        </tr>
+      </thead>
+      <tbody>
+        {registros.map(registro => (
+          <tr key={registro.id}>
+            <td>{registro.id}</td>
+            <td>{registro.info}</td>
           </tr>
-        </thead>
-        <tbody>
-          {registros.map((registro) => (
-            <tr key={registro.id}>
-              <td>{registro.id}</td>
-              <td>{registro.data}</td>
-              <td>
-                <button 
-                  className="btn btn-warning me-2" 
-                  onClick={() => router.push(`/actualizar-registro/${registro.id}`)}
-                >
-                  Actualizar
-                </button>
-                <button 
-                  className="btn btn-danger" 
-                  onClick={() => { setSelectedId(registro.id); setShowModal(true); }}
-                >
-                  Eliminar
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {showModal && (
-        <ModalEliminar
-          id={selectedId}
-          onClose={() => setShowModal(false)}
-          onDeleteSuccess={handleDeleteSuccess}
-        />
-      )}
-    </div>
+        ))}
+      </tbody>
+    </table>
   );
 };
 

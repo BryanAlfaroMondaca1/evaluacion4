@@ -1,57 +1,42 @@
-// src/pages/actualizar-registro/[id].tsx
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { db } from '../../firebaseConfig';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import React, { FormEvent, useState } from 'react';
+import { db } from '../../../Firebase/firebase'; // Asegúrate de que la ruta es correcta
+import { doc, getDoc } from 'firebase/firestore';
 
-const ActualizarRegistro = () => {
-  const router = useRouter();
-  const { id } = router.query;
-  const [data, setData] = useState('');
+const IdPage = () => {
+  const [documentId, setDocumentId] = useState('');
 
-  useEffect(() => {
-    const fetchRecord = async () => {
-      if (id) {
-        const docRef = doc(db, 'coca-cola', id);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setData(docSnap.data().data);
-        }
-      }
-    };
-    fetchRecord();
-  }, [id]);
-
-  const handleUpdate = async (e) => {
-    e.preventDefault();
+  const fetchDocument = async () => {
     try {
-      const docRef = doc(db, 'coca-cola', id);
-      await updateDoc(docRef, { data });
-      alert('Actualización exitosa');
-      router.push('/visualizar-registros');
+      const docRef = doc(db, 'yourCollectionName', documentId);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data());
+      } else {
+        console.log("No such document!");
+      }
     } catch (error) {
-      console.error(error);
-      alert('Error en la actualización');
+      console.error("Error fetching document:", error);
     }
   };
 
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    fetchDocument();
+  };
+
   return (
-    <div className="container">
-      <h2>Actualizar Registro</h2>
-      <form onSubmit={handleUpdate}>
-        <div className="mb-3">
-          <label className="form-label">Información</label>
-          <input
-            type="text"
-            className="form-control"
-            value={data}
-            onChange={(e) => setData(e.target.value)}
-          />
-        </div>
-        <button type="submit" className="btn btn-primary">Actualizar</button>
+    <div>
+      <form onSubmit={handleSubmit}>
+        <input 
+          type="text"
+          value={documentId}
+          onChange={(e) => setDocumentId(e.target.value)}
+          placeholder="Enter Document ID"
+        />
+        <button type="submit">Fetch Document</button>
       </form>
     </div>
   );
 };
 
-export default ActualizarRegistro;
+export default IdPage;
