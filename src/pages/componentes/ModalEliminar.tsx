@@ -1,31 +1,29 @@
-// src/components/ModalEliminar.tsx
-import { useState } from 'react';
-import { db } from '../firebase';
-
-
-
+import React from 'react';
+import { db } from '../../Firebase/firebase'; // Asegúrate de que la ruta está correcta
 import { doc, deleteDoc } from 'firebase/firestore';
 
-const ModalEliminar = ({ id, onClose, onDeleteSuccess }) => {
-  const [loading, setLoading] = useState(false);
+interface ModalEliminarProps {
+  id: string; // Ajusta el tipo según los datos reales que manejes
+  onClose: () => void;
+  onDeleteSuccess: () => void;
+}
 
+const ModalEliminar: React.FC<ModalEliminarProps> = ({ id, onClose, onDeleteSuccess }) => {
   const handleDelete = async () => {
-    setLoading(true);
     try {
-      const docRef = doc(db, 'coca-cola', id);
+      const docRef = doc(db, 'tuColección', id); // Asegúrate de cambiar 'tuColección' por el nombre real de tu colección
       await deleteDoc(docRef);
-      setLoading(false);
       onDeleteSuccess();
-      onClose();
     } catch (error) {
-      console.error(error);
-      setLoading(false);
-      alert('Error al eliminar');
+      console.error('Error al eliminar el documento: ', error);
+      alert('Error al eliminar el documento');
     }
+    onClose();
   };
 
   return (
-    <div className="modal show d-block" tabIndex="-1">
+    <div className="modal show d-block" tabIndex={-1}>
+
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
@@ -33,13 +31,11 @@ const ModalEliminar = ({ id, onClose, onDeleteSuccess }) => {
             <button type="button" className="btn-close" onClick={onClose}></button>
           </div>
           <div className="modal-body">
-            <p>¿Está seguro de que desea eliminar este registro?</p>
+            <p>¿Estás seguro de que deseas eliminar este registro?</p>
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-secondary" onClick={onClose}>Cancelar</button>
-            <button type="button" className="btn btn-danger" onClick={handleDelete} disabled={loading}>
-              {loading ? 'Eliminando...' : 'Eliminar'}
-            </button>
+            <button type="button" className="btn btn-danger" onClick={handleDelete}>Eliminar</button>
           </div>
         </div>
       </div>
