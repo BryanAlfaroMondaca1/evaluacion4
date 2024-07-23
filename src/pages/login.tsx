@@ -1,18 +1,18 @@
-// pages/index.tsx
+// src/pages/Login.tsx
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/router';
+import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (email === 'admin' && password === 'admin') {
-      router.push('/menu');
+      navigate('/menu');
     } else {
       setError('Credenciales inválidas');
     }
