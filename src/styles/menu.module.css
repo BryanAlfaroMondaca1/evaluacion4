@@ -1,0 +1,31 @@
+/* components/Menu.module.css */
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Ocupa el alto de la pantalla */
+    width: 100vw;  /* Ocupa el ancho de la pantalla */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  .menuItem {
+    flex: 1; /* Hace que cada item ocupe el mismo espacio */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 1.5rem;
+    color: #fff;
+    background-color: #007bff; /* Cambia el color de fondo si lo deseas */
+    border: 1px solid #0056b3; /* Cambia el color del borde si lo deseas */
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .menuItem:hover {
+    background-color: #0056b3; /* Cambia el color de fondo al pasar el mouse */
+    color: #fff;
+  }
+  
