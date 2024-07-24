@@ -1,26 +1,29 @@
-// src/pages/Login.tsx
+// pages/login.tsx
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validación de credenciales
     if (email === 'admin' && password === 'admin') {
-      navigate('/menu');
+      router.push('/menu'); // Redirige al menú principal si las credenciales son correctas
     } else {
-      setError('Credenciales inválidas');
+      setError('Credenciales incorrectas. Intenta nuevamente.');
     }
   };
 
   return (
     <div className="container mt-5">
       <h1>Iniciar Sesión</h1>
+      {error && <div className="alert alert-danger">{error}</div>}
       <form onSubmit={handleLogin}>
         <div className="mb-3">
           <label htmlFor="email" className="form-label">Email</label>
@@ -44,7 +47,6 @@ const Login: React.FC = () => {
             required
           />
         </div>
-        {error && <div className="alert alert-danger">{error}</div>}
         <button type="submit" className="btn btn-primary">Iniciar Sesión</button>
       </form>
     </div>
