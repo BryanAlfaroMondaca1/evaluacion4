@@ -1,53 +1,99 @@
-// pages/actualizar-registro.tsx
+
 
 import React, { useEffect, useState } from 'react';
-import { collection, doc, getDoc, updateDoc } from 'firebase/firestore';
-import { db } from '../Firebase/credenciales'; // Asegúrate de importar correctamente la configuración de Firebase
-
-interface Registro {
-  id: string;
-  nombre: string;
-  email: string;
-}
+import { useParams, useNavigate } from 'react-router-dom';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db } from '../Firebase/credenciales';
+import { IPersona } from '../Interfaces/IPersona';
 
 const ActualizarRegistro: React.FC = () => {
-  const [registro, setRegistro] = useState<Registro | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const { id } = useParams<{ id: string }>();
+  const [registro, setRegistro] = useState<IPersona | null>(null);
+  const [nombre, setNombre] = useState('');
+  const [edad, setEdad] = useState<number | ''>('');
+  const [correo, setCorreo] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchRegistro = async () => {
-      try {
-        const docRef = doc(collection(db, 'users'), 'id_del_registro'); // Cambia 'id_del_registro' por el ID del registro
+    const obtenerRegistro = async () => {
+      if (id) {
+        const docRef = doc(db, "usuarios", id);
         const docSnap = await getDoc(docRef);
-
         if (docSnap.exists()) {
-          setRegistro({ id: docSnap.id, ...docSnap.data() } as Registro);
+          const data = docSnap.data() as IPersona;
+          setRegistro(data);
+          setNombre(data.nombre);
+          setEdad(data.edad);
+          setCorreo(data.correo);
         } else {
-          setError('Registro no encontrado');
+          console.error("Registro no encontrado");
         }
-      } catch (err) {
-        console.error('Error al obtener el registro:', err);
-        setError('Error al obtener el registro');
       }
     };
 
-    fetchRegistro();
-  }, []);
+    obtenerRegistro();
+  }, [id]);
 
-  // Resto del código de la página
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (id) {
+      const docRef = doc(db, "usuarios", id);
+      try {
+        await updateDoc(docRef, {
+          nombre,
+          edad,
+          correo
+        });
+        navigate('/visualizar-registrado');
+      } catch (error) {
+        console.error("Error al actualizar el registro:", error);
+      }
+    }
+  };
+
+  if (!registro) {
+    return <p>Cargando...</p>;
+  }
+
   return (
-    <div className="container">
-      {/* Agrega aquí el contenido y los formularios necesarios */}
-      {error && <div className="alert alert-danger">{error}</div>}
-      {/* Renderiza el registro si existe */}
-      {registro && (
-        <div>
-          <h1>Actualizar Registro</h1>
-          <p>Nombre: {registro.nombre}</p>
-          <p>Email: {registro.email}</p>
-          {/* Agrega aquí el formulario para actualizar el registro */}
+    <div className="container mt-5">
+      <h1>Actualizar Registro</h1>
+      <form onSubmit={handleUpdate}>
+        <div className="mb-3">
+          <label htmlFor="nombre" className="form-label">Nombre</label>
+          <input
+            type="text"
+            id="nombre"
+            className="form-control"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+            required
+          />
         </div>
-      )}
+        <div className="mb-3">
+          <label htmlFor="edad" className="form-label">Edad</label>
+          <input
+            type="number"
+            id="edad"
+            className="form-control"
+            value={edad}
+            onChange={(e) => setEdad(Number(e.target.value))}
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="correo" className="form-label">Correo</label>
+          <input
+            type="email"
+            id="correo"
+            className="form-control"
+            value={correo}
+            onChange={(e) => setCorreo(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit" className="btn btn-primary">Actualizar</button>
+      </form>
     </div>
   );
 };

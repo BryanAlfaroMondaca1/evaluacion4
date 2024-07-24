@@ -17,9 +17,7 @@ const Menu: React.FC = () => {
         <li className="list-group-item">
           <Link href="/visualizar-registrado">Visualizar lo Registrado</Link>
         </li>
-        <li className="list-group-item">
-          <Link href="/visualizar-tematicas">Visualizar Temáticas</Link>
-        </li>
+        
         <li className="list-group-item">
           <Link href="/logout">Salir</Link>
         </li>

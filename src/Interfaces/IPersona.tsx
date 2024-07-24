@@ -1,4 +1,4 @@
-// src/Interfaces/IPersona.tsx
+
 
 export interface IPersona {
     id: string;
