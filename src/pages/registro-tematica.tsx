@@ -1,4 +1,4 @@
-// pages/registro-tematica.tsx
+
 
 import React, { useState } from 'react';
 import { collection, addDoc } from 'firebase/firestore';

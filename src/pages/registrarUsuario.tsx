@@ -1,4 +1,4 @@
-// pages/registrar-usuario.tsx
+
 
 import React, { useState } from 'react';
 import { collection, addDoc } from 'firebase/firestore';
